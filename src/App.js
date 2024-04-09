@@ -1,16 +1,11 @@
 import React, { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getChat, getRemoved } from "./getChatData";
+import { getChat, getRemoved, serverUrl } from "./getChatData";
 import "./App.css";
 
 const App = () => {
   const [channel, setChannel] = useState("");
   const [connected, setConnected] = useState(false);
-
-  const serverUrl =
-    process.env.NODE_ENV === "production"
-      ? "http://jeans-research-server.vercel.app:3000"
-      : "http://localhost:3000";
 
   useQueryClient();
 
