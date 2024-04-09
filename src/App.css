@@ -1,38 +1,61 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.displayer {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 40vh;
+  background-color: var(--twitchViolet);
+  margin-right: 1hv;
+}
+
+.chat_holder {
+  border: 5px solid silver;
+  background-color: whitesmoke;
+  overflow: auto;
+  color: black;
+  flex-grow: 3;
+  width: 100%;
+  min-height: 25vh;
+}
+.removed_holder {
+  color: black;
+  border: 5px solid silver;
+  background-color: rgb(161, 135, 135);
+  overflow: auto;
+  flex-grow: 1;
+  width: 100%;
+  min-height: 10vh;
+}
+
+.search_bar {
+  display: flex;
+  align-items: center;
+  height: 8vh;
+}
+
+.header {
+  display: flex;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  background: var(--twitchViolet);
+  color: #fff;
+  font-family: "Twitchy", sans-serif;
+  font-size: 25px;
+  height: 50px;
+  padding-bottom: 5px;
+  border-bottom: 3px solid darkgray;
 }
 
-.App-link {
-  color: #61dafb;
+.title {
+  /* height: 40px;
+  margin: auto; */
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+@font-face {
+  font-family: "Twitchy";
+  src: url("./fonts/Twitchy.TV.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Roobert";
+  src: url("./fonts/RoobertRegular.ttf") format("truetype");
 }
