@@ -1,6 +1,6 @@
 export const serverUrl =
   process.env.NODE_ENV === "production"
-    ? "https://twitch-analys-server.vercel.app:3000"
+    ? "https://twitch-analys-server.vercel.app"
     : "http://localhost:3000";
 
 export async function getChat({ queryKey }) {
