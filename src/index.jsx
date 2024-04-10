@@ -17,6 +17,9 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
+      <div className="header">
+        <div className="title">Les recherches de Jean</div>
+      </div>
       <App />
     </QueryClientProvider>
   </React.StrictMode>

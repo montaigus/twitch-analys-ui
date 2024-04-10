@@ -33,24 +33,6 @@
   height: 8vh;
 }
 
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--twitchViolet);
-  color: #fff;
-  font-family: "Twitchy", sans-serif;
-  font-size: 25px;
-  height: 50px;
-  padding-bottom: 5px;
-  border-bottom: 3px solid darkgray;
-}
-
-.title {
-  /* height: 40px;
-  margin: auto; */
-}
-
 @font-face {
   font-family: "Twitchy";
   src: url("./fonts/Twitchy.TV.ttf") format("truetype");
