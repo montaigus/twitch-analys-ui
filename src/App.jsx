@@ -83,9 +83,6 @@ const App = () => {
 
   return (
     <>
-      <div className="header">
-        <div className="title">Les recherches de Jean</div>
-      </div>
       <div className="appContainer">
         <div className="search_bar">
           <input
