@@ -43,7 +43,7 @@ function App() {
         {channels.map((chan) => {
           return (
             <ChatListener
-              key={channels.indexOf(chan)}
+              key={chan}
               channel={chan}
               allChat={queryResultAllChat.data}
               setRerender={setRerender}
