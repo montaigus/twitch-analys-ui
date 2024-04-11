@@ -1,146 +1,80 @@
 import React, { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getChat, getRemoved, serverUrl } from "./getChatData";
+import { serverUrl } from "./getChatData";
 import "./App.css";
+import ChatListener from "./ChatListener";
+import ChatConnecter from "./ChatConnecter";
 
-const App = () => {
-  const [channel, setChannel] = useState("");
-  const [connected, setConnected] = useState(false);
+function App() {
+  //! pourquoi ça marche pas ?
+  const [rerender, setRerender] = useState(false);
 
   useQueryClient();
 
-  const queryKeyChat = ["chat"];
-  const queryKeyRemoved = ["removed"];
+  const queryChannel = useQuery({
+    queryKey: ["channels"],
+    queryFn: getChannels,
+  });
 
-  const queryResultChat = useQuery({
-    queryKey: queryKeyChat,
-    queryFn: getChat,
+  const queryResultAllChat = useQuery({
+    queryKey: ["AllChat"],
+    queryFn: getAllChat,
     refetchInterval: 1000,
   });
 
-  const queryResultRemoved = useQuery({
-    queryKey: queryKeyRemoved,
-    queryFn: getRemoved,
-    refetchInterval: 3000,
-  });
-
-  if (queryResultChat.isLoading) {
-    return <div>Loading...</div>;
+  if (queryChannel.isLoading) {
+    return <div>Loading channels...</div>;
   }
-  if (queryResultChat.isError) {
-    return <div>Error: {queryResultChat.error.message}</div>;
+  if (queryChannel.isError) {
+    return <div>Error: {queryChannel.error.message}</div>;
   }
-
-  function handleConnect() {
-    fetch(serverUrl + "/connect", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ channel: channel }),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Erreur lors de la requête");
-        }
-        setConnected(true);
-        return response.json();
-      })
-      .then((data) => {
-        console.log(data); // Affiche la réponse du serveur dans la console
-        // Faire quelque chose avec la réponse du serveur si nécessaire
-      })
-      .catch((error) => {
-        console.error("Erreur:", error);
-        // Gérer l'erreur ici
-      });
+  if (queryResultAllChat.isLoading) {
+    return <div>Loading chat...</div>;
+  }
+  if (queryResultAllChat.isError) {
+    return <div>Error: {queryResultAllChat.error.message}</div>;
   }
 
-  function handleDisconnect() {
-    fetch(serverUrl + "/disconnect", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ channel: channel }),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Erreur lors de la requête");
-        }
-        setConnected(false);
-        return response.json();
-      })
-      .then((data) => {
-        console.log(data); // Affiche la réponse du serveur dans la console
-        // Faire quelque chose avec la réponse du serveur si nécessaire
-      })
-      .catch((error) => {
-        console.error("Erreur:", error);
-        // Gérer l'erreur ici
-      });
-  }
+  const channels = queryChannel.data;
 
   return (
     <>
       <div className="appContainer">
-        <div className="search_bar">
-          <input
-            type="text"
-            className="input_channel"
-            placeholder="Chaine à suivre"
-            value={channel}
-            onChange={(e) => setChannel(e.target.value)}
-          />
-          {!connected && (
-            <button className="button_connect" onClick={handleConnect}>
-              Se connecter
-            </button>
-          )}
-          {connected && (
-            <button className="button_disconnect" onClick={handleDisconnect}>
-              Se déconnecter
-            </button>
-          )}
-          {connected && (
-            <a
-              className="button_download"
-              href={`${serverUrl}/download-json?channel=${channel}`}
-            >
-              Télécharger
-            </a>
-          )}
-          {connected && <button className="button_clear">Nettoyer</button>}
-        </div>
-        <div className="displayer">
-          <div className="chat_holder">
-            {!queryResultChat.data && (
-              <div className="message">Rien à afficher</div>
-            )}
-            {queryResultChat.data &&
-              queryResultChat.data.map((msg) => (
-                <div
-                  className="message"
-                  key={msg.data.id}
-                >{`${msg.data.user} : ${msg.data.message}`}</div>
-              ))}
-          </div>
-          <div className="removed_holder">
-            {!queryResultRemoved.data && (
-              <div className="message">Rien à afficher</div>
-            )}
-            {queryResultRemoved.data &&
-              queryResultRemoved.data.map((msg) => (
-                <div
-                  className="message"
-                  key={msg.data.id}
-                >{`${msg.data.user} : ${msg.data.message}`}</div>
-              ))}
-          </div>
-        </div>
+        {channels.map((chan) => {
+          return (
+            <ChatListener
+              key={channels.indexOf(chan)}
+              channel={chan}
+              allChat={queryResultAllChat.data}
+              setRerender={setRerender}
+            ></ChatListener>
+          );
+        })}
+        <ChatConnecter setRerender={setRerender} />
       </div>
     </>
   );
-};
+
+  async function getChannels() {
+    const apiRes = await fetch(`${serverUrl}/channels`);
+    if (!apiRes.ok) {
+      //?on verra ça plus tard
+      //throw new console.error("not ok");
+    }
+    const result = apiRes.json();
+    //setChannels(result);
+    console.log(result);
+    return result;
+  }
+
+  async function getAllChat({ queryKey }) {
+    const apiRes = await fetch(`${serverUrl}/allchat`);
+    if (!apiRes.ok) {
+      //?on verra ça plus tard
+      //throw new console.error("not ok");
+    }
+    return apiRes.json();
+  }
+}
 
 export default App;

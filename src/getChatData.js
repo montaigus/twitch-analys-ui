@@ -21,3 +21,13 @@ export async function getRemoved({ queryKey }) {
 
   return apiRes.json();
 }
+
+export async function getBots({ queryKey }) {
+  const apiRes = await fetch(`${serverUrl}/removed`);
+  if (!apiRes.ok) {
+    //?on verra ça plus tard
+    //throw new console.error("not ok");
+  }
+
+  return apiRes.json();
+}
