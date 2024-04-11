@@ -20,7 +20,13 @@ const ChatListener = (props) => {
           value={channel}
           disabled={true}
         />
-        <button className="button_disconnect" onClick={handleDisconnect}>
+        <button
+          className="button_disconnect"
+          onClick={(e) => {
+            e.target.disabled = true;
+            handleDisconnect();
+          }}
+        >
           X
         </button>
       </div>

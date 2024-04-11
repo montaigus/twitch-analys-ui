@@ -21,7 +21,13 @@ function ChatConnecter(props) {
           onChange={(e) => setChannel(e.target.value)}
         />
 
-        <button className="button_connect" onClick={handleConnect}>
+        <button
+          className="button_connect"
+          onClick={(e) => {
+            e.target.disabled = true;
+            handleConnect(e);
+          }}
+        >
           Se connecter
         </button>
       </div>
