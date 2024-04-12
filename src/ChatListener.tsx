@@ -1,13 +1,19 @@
 import React, { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getChat, getRemoved, serverUrl } from "./getChatData";
+import { getChat, getRemoved, serverUrl } from "./getChatData.js";
 import "./App.css";
+import { storedMessage, channelAllMsg } from "./types.ts";
 
-const ChatListener = (props) => {
+type ChatListenerProps = {
+  allChat: channelAllMsg;
+  channel: string;
+};
+
+const ChatListener = (props: ChatListenerProps) => {
   const queryClient = useQueryClient();
 
-  const chatMsg = props.allChat.chat;
-  const removedMsg = props.allChat.removed;
+  const chatMsg: storedMessage[] = props.allChat.chatMsg || [];
+  const removedMsg: storedMessage[] = props.allChat.removedMsg || [];
   const channel = props.channel.substring(1).toString();
 
   return (
@@ -23,7 +29,7 @@ const ChatListener = (props) => {
         <button
           className="button_disconnect"
           onClick={(e) => {
-            e.target.disabled = true;
+            //e.target.disabled = true;
             handleDisconnect();
           }}
         >
@@ -32,24 +38,20 @@ const ChatListener = (props) => {
       </div>
       <div className="displayer">
         <div className="chat_holder">
-          {chatMsg
-            .filter((c) => c.channel.toLowerCase() === channel.toLowerCase())
-            .map((msg) => (
-              <div
-                className="message"
-                key={msg.data.id}
-              >{`${msg.data.user} : ${msg.data.message}`}</div>
-            ))}
+          {chatMsg.map((msg) => (
+            <div
+              className="message"
+              key={msg.id}
+            >{`${msg.user} : ${msg.message}`}</div>
+          ))}
         </div>
         <div className="removed_holder">
-          {removedMsg
-            .filter((c) => c.channel.toLowerCase() === channel.toLowerCase())
-            .map((msg) => (
-              <div
-                className="message"
-                key={msg.data.id}
-              >{`${msg.data.user} : ${msg.data.message}`}</div>
-            ))}
+          {removedMsg.map((msg) => (
+            <div
+              className="message"
+              key={msg.id}
+            >{`${msg.user} : ${msg.message}`}</div>
+          ))}
         </div>
       </div>
     </>
@@ -58,7 +60,7 @@ const ChatListener = (props) => {
   function handleDisconnect() {
     //! pourquoi ça marche pas ?
     queryClient.invalidateQueries({ queryKey: ["channel"] });
-    props.setRerender(true);
+    //props.setRerender(true);
     fetch(serverUrl + "/disconnect", {
       method: "POST",
       headers: {

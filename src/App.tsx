@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { serverUrl } from "./getChatData";
+import { serverUrl } from "./getChatData.js";
 import "./App.css";
-import ChatListener from "./ChatListener";
-import ChatConnecter from "./ChatConnecter";
+import ChatListener from "./ChatListener.tsx";
+import ChatConnecter from "./ChatConnecter.jsx";
+import { storedMessage, channelAllMsg } from "./types.ts";
 
 function App() {
   //! pourquoi ça marche pas ?
@@ -36,17 +37,21 @@ function App() {
   }
 
   const channels = queryChannel.data;
+  console.log(queryResultAllChat.data);
 
   return (
     <>
       <div className="appContainer">
         {channels.map((chan) => {
+          const messages: channelAllMsg = queryResultAllChat.data.filter(
+            (o) => o.channel.toLowerCase() === chan
+          );
           return (
             <ChatListener
-              key={chan}
+              key={channels.indexOf(chan)}
               channel={chan}
-              allChat={queryResultAllChat.data}
-              setRerender={setRerender}
+              allChat={messages}
+              //setRerender={setRerender}
             ></ChatListener>
           );
         })}
