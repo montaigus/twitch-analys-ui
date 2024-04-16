@@ -59,7 +59,7 @@ const ChatListener = (props: ChatListenerProps) => {
 
   function handleDisconnect() {
     //! pourquoi ça marche pas ?
-    queryClient.invalidateQueries({ queryKey: ["channel"] });
+    queryClient.invalidateQueries({ queryKey: ["channels"] });
     //props.setRerender(true);
     fetch(serverUrl + "/disconnect", {
       method: "POST",

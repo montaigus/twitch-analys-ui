@@ -35,9 +35,8 @@ function App() {
   if (queryResultAllChat.isError) {
     return <div>Error: {queryResultAllChat.error.message}</div>;
   }
-
   const channels = queryChannel.data;
-  console.log(queryResultAllChat.data);
+  console.log({ channels });
 
   return (
     <>
@@ -66,7 +65,7 @@ function App() {
       //?on verra ça plus tard
       //throw new console.error("not ok");
     }
-    const result = apiRes.json();
+    const result = await apiRes.json();
     //setChannels(result);
     console.log(result);
     return result;
@@ -78,7 +77,7 @@ function App() {
       //?on verra ça plus tard
       //throw new console.error("not ok");
     }
-    return apiRes.json();
+    return await apiRes.json();
   }
 }
 

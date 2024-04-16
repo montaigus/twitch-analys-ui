@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
 
 const serverUrl =
   process.env.NODE_ENV === "production"
@@ -9,6 +9,13 @@ const serverUrl =
 function ChatConnecter(props) {
   const [channel, setChannel] = useState("");
   const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: handleConnect,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["channels"] });
+    },
+  });
 
   return (
     <>
@@ -25,7 +32,7 @@ function ChatConnecter(props) {
           className="button_connect"
           onClick={(e) => {
             e.target.disabled = true;
-            handleConnect(e);
+            mutation.mutate();
           }}
         >
           Se connecter
@@ -36,10 +43,8 @@ function ChatConnecter(props) {
 
   function handleConnect() {
     //! pourquoi ça marche pas ?
-    queryClient.invalidateQueries({ queryKey: ["channel"] });
-    props.setRerender(true);
     //queryClient.refetchQueries({ queryKey: ["channels"] });
-    fetch(serverUrl + "/connect", {
+    return fetch(serverUrl + "/connect", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -53,8 +58,11 @@ function ChatConnecter(props) {
         return response.json();
       })
       .then((data) => {
+        // props.setRerender(true);
         console.log(data); // Affiche la réponse du serveur dans la console
         // Faire quelque chose avec la réponse du serveur si nécessaire
+
+        return data;
       })
       .catch((error) => {
         console.error("Erreur:", error);
