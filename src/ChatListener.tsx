@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getChat, getRemoved, serverUrl } from "./getChatData.js";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { serverUrl } from "./getChatData.js";
 import "./App.css";
 import { storedMessage, channelAllMsg } from "./types.ts";
 
@@ -10,11 +10,20 @@ type ChatListenerProps = {
 };
 
 const ChatListener = (props: ChatListenerProps) => {
+  const [disabled, setDisabled] = useState(false);
+
   const queryClient = useQueryClient();
 
   const chatMsg: storedMessage[] = props.allChat.chatMsg || [];
   const removedMsg: storedMessage[] = props.allChat.removedMsg || [];
-  const channel = props.channel.substring(1).toString();
+  const channel = props.channel.toString();
+
+  const mutationDisconnect = useMutation({
+    mutationFn: handleDisconnect,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["channels"] });
+    },
+  });
 
   return (
     <>
@@ -28,9 +37,10 @@ const ChatListener = (props: ChatListenerProps) => {
         />
         <button
           className="button_disconnect"
+          disabled={disabled}
           onClick={(e) => {
-            //e.target.disabled = true;
-            handleDisconnect();
+            setDisabled(true);
+            mutationDisconnect.mutate();
           }}
         >
           X
@@ -38,12 +48,14 @@ const ChatListener = (props: ChatListenerProps) => {
       </div>
       <div className="displayer">
         <div className="chat_holder">
-          {chatMsg.map((msg) => (
-            <div
-              className="message"
-              key={msg.id}
-            >{`${msg.user} : ${msg.message}`}</div>
-          ))}
+          {chatMsg.map((msg) => {
+            return (
+              <div
+                className="message"
+                key={msg.id}
+              >{`${msg.user} : ${msg.message}`}</div>
+            );
+          })}
         </div>
         <div className="removed_holder">
           {removedMsg.map((msg) => (
@@ -57,31 +69,17 @@ const ChatListener = (props: ChatListenerProps) => {
     </>
   );
 
-  function handleDisconnect() {
-    //! pourquoi ça marche pas ?
-    queryClient.invalidateQueries({ queryKey: ["channels"] });
-    //props.setRerender(true);
-    fetch(serverUrl + "/disconnect", {
+  async function handleDisconnect() {
+    const response = await fetch(serverUrl + "/disconnect", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ channel: channel }),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Erreur lors de la requête");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log(data); // Affiche la réponse du serveur dans la console
-        // Faire quelque chose avec la réponse du serveur si nécessaire
-      })
-      .catch((error) => {
-        console.error("Erreur:", error);
-        // Gérer l'erreur ici
-      });
+    });
+    if (!response.ok) {
+      throw new Error("Erreur lors de la requête");
+    }
   }
 };
 

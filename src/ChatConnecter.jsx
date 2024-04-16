@@ -6,14 +6,17 @@ const serverUrl =
     ? "https://twitch-analys-server.vercel.app"
     : "http://localhost:3000";
 
-function ChatConnecter(props) {
+function ChatConnecter() {
   const [channel, setChannel] = useState("");
+  const [disabled, setDisabled] = useState(false);
   const queryClient = useQueryClient();
 
-  const mutation = useMutation({
+  const mutationConnect = useMutation({
     mutationFn: handleConnect,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["channels"] });
+      setChannel("");
+      setDisabled(false);
     },
   });
 
@@ -30,9 +33,10 @@ function ChatConnecter(props) {
 
         <button
           className="button_connect"
+          disabled={disabled}
           onClick={(e) => {
-            e.target.disabled = true;
-            mutation.mutate();
+            setDisabled(true);
+            mutationConnect.mutate();
           }}
         >
           Se connecter
@@ -41,33 +45,26 @@ function ChatConnecter(props) {
     </>
   );
 
-  function handleConnect() {
-    //! pourquoi ça marche pas ?
-    //queryClient.refetchQueries({ queryKey: ["channels"] });
-    return fetch(serverUrl + "/connect", {
+  async function handleConnect() {
+    const response = await fetch(serverUrl + "/connect", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ channel: channel }),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Erreur lors de la requête");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        // props.setRerender(true);
-        console.log(data); // Affiche la réponse du serveur dans la console
-        // Faire quelque chose avec la réponse du serveur si nécessaire
+    });
 
-        return data;
-      })
-      .catch((error) => {
-        console.error("Erreur:", error);
-        // Gérer l'erreur ici
-      });
+    if (!response.ok) {
+      throw new Error("Erreur lors de la requête");
+    }
+    /*const json = await response.json();
+    /*.catch((error) => {
+      console.error("Erreur:", error);
+      // Gérer l'erreur ici
+    });
+    console.log(json);
+    return json.data;
+    */
   }
 }
 
