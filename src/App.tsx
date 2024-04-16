@@ -1,15 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { serverUrl } from "./getChatData.js";
 import "./App.css";
 import ChatListener from "./ChatListener.tsx";
 import ChatConnecter from "./ChatConnecter.jsx";
-import { storedMessage, channelAllMsg } from "./types.ts";
+import { channelAllMsg } from "./types.ts";
 
 function App() {
-  //! pourquoi ça marche pas ?
-  const [rerender, setRerender] = useState(false);
-
   useQueryClient();
 
   const queryChannel = useQuery({
@@ -37,37 +34,37 @@ function App() {
   }
   const channels = queryChannel.data;
   console.log({ channels });
-
   return (
     <>
       <div className="appContainer">
         {channels.map((chan) => {
-          const messages: channelAllMsg = queryResultAllChat.data.filter(
-            (o) => o.channel.toLowerCase() === chan
-          );
+          const messages: channelAllMsg =
+            queryResultAllChat.data.find(
+              (o) => o.channel.toLowerCase() === chan
+            ) || new channelAllMsg(chan);
           return (
             <ChatListener
-              key={channels.indexOf(chan)}
+              key={chan}
               channel={chan}
               allChat={messages}
               //setRerender={setRerender}
             ></ChatListener>
           );
         })}
-        <ChatConnecter setRerender={setRerender} />
+        <ChatConnecter />
       </div>
     </>
   );
 
   async function getChannels() {
+    console.log("channels");
     const apiRes = await fetch(`${serverUrl}/channels`);
     if (!apiRes.ok) {
       //?on verra ça plus tard
       //throw new console.error("not ok");
     }
     const result = await apiRes.json();
-    //setChannels(result);
-    console.log(result);
+
     return result;
   }
 
