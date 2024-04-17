@@ -1,10 +1,14 @@
 import React from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  UseQueryResult,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { serverUrl } from "./getChatData.js";
 import "./App.css";
 import ChatListener from "./ChatListener.tsx";
 import ChatConnecter from "./ChatConnecter.jsx";
-import { channelAllMsg } from "./types.ts";
+import { ChannelAllMsg } from "./types.ts";
 
 function App() {
   useQueryClient();
@@ -14,7 +18,7 @@ function App() {
     queryFn: getChannels,
   });
 
-  const queryResultAllChat = useQuery({
+  const queryResultAllChat: UseQueryResult<ChannelAllMsg[], Error> = useQuery({
     queryKey: ["AllChat"],
     queryFn: getAllChat,
     refetchInterval: 1000,
@@ -38,10 +42,10 @@ function App() {
     <>
       <div className="appContainer">
         {channels.map((chan) => {
-          const messages: channelAllMsg =
+          const messages: ChannelAllMsg =
             queryResultAllChat.data.find(
-              (o) => o.channel.toLowerCase() === chan
-            ) || new channelAllMsg(chan);
+              (chat) => chat.channel.toLowerCase() === chan
+            ) || new ChannelAllMsg(chan);
           return (
             <ChatListener
               key={chan}
@@ -63,7 +67,7 @@ function App() {
       //?on verra ça plus tard
       //throw new console.error("not ok");
     }
-    const result = await apiRes.json();
+    const result: string[] = await apiRes.json();
 
     return result;
   }
@@ -74,7 +78,9 @@ function App() {
       //?on verra ça plus tard
       //throw new console.error("not ok");
     }
-    return await apiRes.json();
+    const result: ChannelAllMsg[] = await apiRes.json();
+
+    return result;
   }
 }
 

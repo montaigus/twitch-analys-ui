@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { serverUrl } from "./getChatData.js";
 import "./App.css";
-import { storedMessage, channelAllMsg } from "./types.ts";
+import { StoredMessage, ChannelAllMsg } from "./types.ts";
 
 type ChatListenerProps = {
-  allChat: channelAllMsg;
+  allChat: ChannelAllMsg;
   channel: string;
 };
 
@@ -14,8 +14,8 @@ const ChatListener = (props: ChatListenerProps) => {
 
   const queryClient = useQueryClient();
 
-  const chatMsg: storedMessage[] = props.allChat.chatMsg || [];
-  const removedMsg: storedMessage[] = props.allChat.removedMsg || [];
+  const chatMsg: StoredMessage[] = props.allChat.chatMsg || [];
+  const removedMsg: StoredMessage[] = props.allChat.removedMsg || [];
   const channel = props.channel.toString();
 
   const mutationDisconnect = useMutation({
