@@ -29,6 +29,12 @@ function ChatConnecter() {
           placeholder="Chaine à suivre"
           value={channel}
           onChange={(e) => setChannel(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              setDisabled(true);
+              mutationConnect.mutate();
+            }
+          }}
         />
 
         <button

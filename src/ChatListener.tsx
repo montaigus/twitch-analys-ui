@@ -20,8 +20,12 @@ const ChatListener = (props: ChatListenerProps) => {
 
   const mutationDisconnect = useMutation({
     mutationFn: handleDisconnect,
+    //!C'est pas ouf, mais c'est le seul moyen pour l'instant
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["channels"] });
+      setTimeout(
+        () => queryClient.invalidateQueries({ queryKey: ["channels"] }),
+        200
+      );
     },
   });
 
