@@ -4,11 +4,11 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { serverUrl } from "./getChatData.js";
 import "./App.css";
 import ChatListener from "./ChatListener.tsx";
 import ChatConnecter from "./ChatConnecter.jsx";
 import { ChannelAllMsg } from "./types.ts";
+import { serverUrl } from "./index.jsx";
 
 function App() {
   useQueryClient();

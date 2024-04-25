@@ -1,10 +1,6 @@
 import { useState } from "react";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
-
-const serverUrl =
-  process.env.NODE_ENV === "production"
-    ? "https://twitch-analys-server.vercel.app"
-    : "http://localhost:3000";
+import { serverUrl } from "./index.jsx";
 
 function ChatConnecter() {
   const [channel, setChannel] = useState("");

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { serverUrl } from "./getChatData.js";
+import { serverUrl } from "./index.jsx";
 import "./App.css";
 import { StoredMessage, ChannelAllMsg } from "./types.ts";
 
