@@ -11,9 +11,8 @@
   display: grid;
   grid-template-columns: 1fr 5fr 1fr;
   background: whitesmoke;
-  color: var(--twitchViolet);
   min-height: 50px;
-  padding-bottom: 5px;
+  padding: 1rem;
   border: 5px var(--twitchViolet) solid;
   margin: 1rem;
   box-shadow: -7px 7px var(--twitchViolet);
@@ -21,7 +20,12 @@
 
 #main_title {
   font-family: "Twitchy", sans-serif;
-  font-size: 2rem;
+  color: whitesmoke;
+  text-shadow: -4px 4px var(--twitchViolet), 3px -3px var(--twitchViolet),
+    1px 1px var(--twitchViolet), -1px -1px var(--twitchViolet),
+    -5px 5px var(--twitchViolet), -6px 6px var(--twitchViolet),
+    -7px 7px var(--twitchViolet);
+  font-size: 3rem;
   grid-column-start: 2;
   place-self: center;
 }
