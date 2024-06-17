@@ -41,7 +41,7 @@ function App() {
   return (
     <>
       <div className="appContainer">
-        {channels.map((chan) => {
+        {channels?.map((chan) => {
           const messages: ChannelAllMsg =
             queryResultAllChat.data.find(
               (chat) => chat.channel.toLowerCase() === chan

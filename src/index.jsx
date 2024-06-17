@@ -23,8 +23,12 @@ root.render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <div className="header">
-        <div className="title">Les recherches de Jean</div>
-        <a className="button_download" href={`${serverUrl}/download-json`}>
+        <div id="main_title">Projet Comprev</div>
+        <a
+          id="button_download"
+          className="button"
+          href={`${serverUrl}/download-json`}
+        >
           Télécharger
         </a>
       </div>
