@@ -6,7 +6,7 @@ import "./index.css";
 
 export const serverUrl =
   process.env.NODE_ENV === "production"
-    ? "https://twitch-analys-server.onrender.com"
+    ? "https://twitch-analys-server.vercel.app"
     : "http://localhost:3000";
 
 const queryClient = new QueryClient({
