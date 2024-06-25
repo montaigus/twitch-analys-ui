@@ -59,14 +59,6 @@ function ChatConnecter() {
     if (!response.ok) {
       throw new Error("Erreur lors de la requête");
     }
-    /*const json = await response.json();
-    /*.catch((error) => {
-      console.error("Erreur:", error);
-      // Gérer l'erreur ici
-    });
-    console.log(json);
-    return json.data;
-    */
   }
 }
 
