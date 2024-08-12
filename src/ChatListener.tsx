@@ -5,7 +5,7 @@ import "./App.css";
 import { StoredMessage, ChannelAllMsg } from "./types.ts";
 
 type ChatListenerProps = {
-  allChat: ChannelAllMsg;
+  allChat: StoredMessage[];
   channel: string;
 };
 
@@ -14,8 +14,8 @@ const ChatListener = (props: ChatListenerProps) => {
 
   const queryClient = useQueryClient();
 
-  const chatMsg: StoredMessage[] = props.allChat.chatMsg || [];
-  const removedMsg: StoredMessage[] = props.allChat.removedMsg || [];
+  const chatMsg: StoredMessage[] = props.allChat || [];
+  const removedMsg: StoredMessage[] = [];
   const channel = props.channel.toString();
 
   const mutationDisconnect = useMutation({

@@ -20,6 +20,7 @@ function ChatConnecter() {
     <>
       <div className="search_bar">
         <input
+          disabled={disabled}
           type="text"
           className="input_channel"
           placeholder="Chaine à suivre"

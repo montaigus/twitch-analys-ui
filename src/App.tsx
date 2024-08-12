@@ -7,7 +7,7 @@ import {
 import "./App.css";
 import ChatListener from "./ChatListener.tsx";
 import ChatConnecter from "./ChatConnecter.jsx";
-import { ChannelAllMsg } from "./types.ts";
+import { ChannelAllMsg, StoredMessage } from "./types.ts";
 import { serverUrl } from "./index.jsx";
 
 function App() {
@@ -18,7 +18,7 @@ function App() {
     queryFn: getChannels,
   });
 
-  const queryResultAllChat: UseQueryResult<ChannelAllMsg[], Error> = useQuery({
+  const queryResultAllChat: UseQueryResult<StoredMessage[], Error> = useQuery({
     queryKey: ["AllChat"],
     queryFn: getAllChat,
     refetchInterval: 1000,
@@ -42,10 +42,9 @@ function App() {
     <>
       <div className="appContainer">
         {channels?.map((chan) => {
-          const messages: ChannelAllMsg =
-            queryResultAllChat.data.find(
-              (chat) => chat.channel.toLowerCase() === chan
-            ) || new ChannelAllMsg(chan);
+          const messages: StoredMessage[] = queryResultAllChat.data.filter(
+            (msg) => msg.channel.toLowerCase() === chan
+          );
           return (
             <ChatListener
               key={chan}
